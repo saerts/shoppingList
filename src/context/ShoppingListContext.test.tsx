@@ -282,6 +282,39 @@ describe('ShoppingListContext', () => {
 
       expect(result.current.items[0].completed).toBe(false);
     });
+
+    it('should change item supermarket', () => {
+      const { result } = renderHook(() => useShoppingList(), { wrapper });
+
+      let walmartId: string;
+      let targetId: string;
+      let itemId: string;
+
+      act(() => {
+        result.current.addSupermarket('Walmart', '#0071ce');
+      });
+
+      act(() => {
+        result.current.addSupermarket('Target', '#cc0000');
+      });
+
+      walmartId = result.current.supermarkets[0].id;
+      targetId = result.current.supermarkets[1].id;
+
+      act(() => {
+        result.current.addItem('Milk', walmartId);
+      });
+
+      itemId = result.current.items[0].id;
+
+      expect(result.current.items[0].supermarketId).toBe(walmartId);
+
+      act(() => {
+        result.current.changeItemSupermarket(itemId, targetId);
+      });
+
+      expect(result.current.items[0].supermarketId).toBe(targetId);
+    });
   });
 
   describe('LocalStorage persistence', () => {
