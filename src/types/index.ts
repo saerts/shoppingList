@@ -1,13 +1,13 @@
-export interface Supermarket {
+export type Supermarket = {
   id: string;
   name: string;
   color: string;
-}
+};
 
-export interface ShoppingItem {
+export type ShoppingItem = {
   id: string;
   name: string;
   supermarketId: string;
   completed: boolean;
   createdAt: Date;
-}
+};

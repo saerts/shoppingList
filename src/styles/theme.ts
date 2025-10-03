@@ -1,23 +1,29 @@
 export const theme = {
   colors: {
-    primary: '#4A90E2',
+    primary: '#FFD600',
     secondary: '#50E3C2',
     success: '#7ED321',
     danger: '#D0021B',
     warning: '#F5A623',
-    dark: '#2C3E50',
+    dark: '#1a1a1a',
     light: '#F8F9FA',
     gray: '#95A5A6',
     white: '#FFFFFF',
     text: {
-      primary: '#2C3E50',
-      secondary: '#7F8C8D',
+      primary: '#E0E0E0',
+      secondary: '#9E9E9E',
       light: '#FFFFFF',
+      dark: '#1a1a1a',
     },
     background: {
-      primary: '#FFFFFF',
-      secondary: '#F8F9FA',
-      tertiary: '#ECF0F1',
+      primary: '#1a1a1a',
+      secondary: '#2a2a2a',
+      tertiary: '#333333',
+      card: '#252525',
+    },
+    border: {
+      light: '#404040',
+      dark: '#2a2a2a',
     },
   },
   spacing: {

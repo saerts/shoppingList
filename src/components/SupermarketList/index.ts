@@ -1,0 +1,1 @@
+export { SupermarketList } from './SupermarketList';

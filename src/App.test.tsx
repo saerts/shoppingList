@@ -3,8 +3,8 @@ import { render, screen } from './utils/testUtils';
 import App from './App';
 
 describe('App', () => {
-  it('renders the Shopping List App heading', () => {
+  it('renders the Shopping Lists heading', () => {
     render(<App />);
-    expect(screen.getByText('Shopping List App')).toBeInTheDocument();
+    expect(screen.getByText('Shopping Lists')).toBeInTheDocument();
   });
 });
