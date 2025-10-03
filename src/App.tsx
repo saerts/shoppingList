@@ -1,11 +1,12 @@
 import { ThemeProvider } from 'styled-components';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { GlobalStyles } from './styles/GlobalStyles';
 import { theme } from './styles/theme';
 import { ShoppingListProvider, useShoppingList } from './context/ShoppingListContext';
 import { Header } from './components/Header';
 import { SupermarketList } from './components/SupermarketList';
 import { AddButton } from './components/AddButton';
+import { ShoppingListDetail } from './pages/ShoppingListDetail';
 import type { Supermarket } from './types';
 import styled from 'styled-components';
 
@@ -31,6 +32,8 @@ const AddButtonContainer = styled.div`
 
 function AppContent() {
   const { items, supermarkets, addSupermarket } = useShoppingList();
+  const [currentView, setCurrentView] = useState<'home' | 'detail'>('home');
+  const [selectedSupermarketId, setSelectedSupermarketId] = useState<string | undefined>();
 
   // Initialize with test data on first load if empty
   useEffect(() => {
@@ -43,14 +46,23 @@ function AppContent() {
   }, []);
 
   const handleSelectSupermarket = (supermarket: Supermarket) => {
-    console.log('Selected supermarket:', supermarket);
-    // TODO: Navigate to supermarket detail view
+    setSelectedSupermarketId(supermarket.id);
+    setCurrentView('detail');
+  };
+
+  const handleBack = () => {
+    setCurrentView('home');
+    setSelectedSupermarketId(undefined);
   };
 
   const handleAddSupermarket = () => {
     console.log('Add supermarket clicked');
     // TODO: Open modal or navigate to add supermarket view
   };
+
+  if (currentView === 'detail' && selectedSupermarketId) {
+    return <ShoppingListDetail supermarketId={selectedSupermarketId} onBack={handleBack} />;
+  }
 
   return (
     <AppContainer>

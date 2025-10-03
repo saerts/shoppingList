@@ -13,6 +13,7 @@ interface ShoppingListContextType extends ShoppingListState {
   updateItem: (id: string, updates: Partial<ShoppingItem>) => void;
   deleteItem: (id: string) => void;
   toggleItemComplete: (id: string) => void;
+  changeItemSupermarket: (itemId: string, newSupermarketId: string) => void;
   addSupermarket: (name: string, color: string) => void;
   updateSupermarket: (id: string, updates: Partial<Supermarket>) => void;
   deleteSupermarket: (id: string) => void;
@@ -65,6 +66,14 @@ export function ShoppingListProvider({ children }: ShoppingListProviderProps) {
     );
   };
 
+  const changeItemSupermarket = (itemId: string, newSupermarketId: string) => {
+    setItems((prev) =>
+      prev.map((item) =>
+        item.id === itemId ? { ...item, supermarketId: newSupermarketId } : item
+      )
+    );
+  };
+
   const addSupermarket = (name: string, color: string) => {
     const newSupermarket: Supermarket = {
       id: crypto.randomUUID(),
@@ -97,6 +106,7 @@ export function ShoppingListProvider({ children }: ShoppingListProviderProps) {
     updateItem,
     deleteItem,
     toggleItemComplete,
+    changeItemSupermarket,
     addSupermarket,
     updateSupermarket,
     deleteSupermarket,
