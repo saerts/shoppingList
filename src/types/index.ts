@@ -1,0 +1,13 @@
+export interface Supermarket {
+  id: string;
+  name: string;
+  color: string;
+}
+
+export interface ShoppingItem {
+  id: string;
+  name: string;
+  supermarketId: string;
+  completed: boolean;
+  createdAt: Date;
+}
