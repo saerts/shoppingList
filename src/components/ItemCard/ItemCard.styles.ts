@@ -8,6 +8,18 @@ export const CardContainer = styled.div`
   background: #2a2a2a;
   border-radius: 12px;
   min-height: 60px;
+  animation: fadeSlideIn 0.3s ease-out;
+
+  @keyframes fadeSlideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
 `;
 
 export const CheckboxButton = styled.button<{ $completed: boolean }>`
@@ -39,6 +51,19 @@ export const CheckIcon = styled.span`
   font-size: 16px;
   font-weight: bold;
   line-height: 1;
+  animation: checkPop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  @keyframes checkPop {
+    0% {
+      transform: scale(0);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
 `;
 
 export const ItemText = styled.span<{ $completed: boolean }>`
@@ -47,6 +72,7 @@ export const ItemText = styled.span<{ $completed: boolean }>`
   font-size: 16px;
   text-decoration: ${props => props.$completed ? 'line-through' : 'none'};
   word-break: break-word;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
 `;
 
 export const DragHandle = styled.button`
@@ -62,11 +88,16 @@ export const DragHandle = styled.button`
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
   letter-spacing: -2px;
 
   &:hover {
     color: #FFD700;
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 
   &:focus {
