@@ -1,20 +1,71 @@
 import { ThemeProvider } from 'styled-components';
+import { useEffect } from 'react';
 import { GlobalStyles } from './styles/GlobalStyles';
 import { theme } from './styles/theme';
 import { ShoppingListProvider, useShoppingList } from './context/ShoppingListContext';
+import { Header } from './components/Header';
+import { SupermarketList } from './components/SupermarketList';
+import { AddButton } from './components/AddButton';
+import type { Supermarket } from './types';
+import styled from 'styled-components';
+
+const AppContainer = styled.div`
+  min-height: 100vh;
+  background-color: ${({ theme }) => theme.colors.background.primary};
+`;
+
+const ContentContainer = styled.div`
+  padding-bottom: ${({ theme }) => theme.spacing.xl};
+`;
+
+const AddButtonContainer = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: ${({ theme }) => theme.spacing.lg};
+  background: linear-gradient(to top, ${({ theme }) => theme.colors.background.primary} 70%, transparent);
+  max-width: 600px;
+  margin: 0 auto;
+`;
 
 function AppContent() {
-  const { items, supermarkets } = useShoppingList();
+  const { items, supermarkets, addSupermarket } = useShoppingList();
 
-  console.log('Shopping Items:', items);
-  console.log('Supermarkets:', supermarkets);
+  // Initialize with test data on first load if empty
+  useEffect(() => {
+    if (supermarkets.length === 0) {
+      addSupermarket('Colruyt', '#FFD600');
+      addSupermarket('Delhaize', '#D32F2F');
+      addSupermarket('Carrefour', '#2196F3');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSelectSupermarket = (supermarket: Supermarket) => {
+    console.log('Selected supermarket:', supermarket);
+    // TODO: Navigate to supermarket detail view
+  };
+
+  const handleAddSupermarket = () => {
+    console.log('Add supermarket clicked');
+    // TODO: Open modal or navigate to add supermarket view
+  };
 
   return (
-    <div>
-      <h1>Shopping List App</h1>
-      <p>Items: {items.length}</p>
-      <p>Supermarkets: {supermarkets.length}</p>
-    </div>
+    <AppContainer>
+      <Header title="Shopping Lists" />
+      <ContentContainer>
+        <SupermarketList
+          supermarkets={supermarkets}
+          items={items}
+          onSelectSupermarket={handleSelectSupermarket}
+        />
+      </ContentContainer>
+      <AddButtonContainer>
+        <AddButton text="+ Add new supermarket" onClick={handleAddSupermarket} />
+      </AddButtonContainer>
+    </AppContainer>
   );
 }
 
