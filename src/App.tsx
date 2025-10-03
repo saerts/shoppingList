@@ -7,6 +7,7 @@ import { Header } from './components/Header';
 import { SupermarketList } from './components/SupermarketList';
 import { AddButton } from './components/AddButton';
 import { ShoppingListDetail } from './pages/ShoppingListDetail';
+import { SupermarketManager } from './components/SupermarketManager/SupermarketManager';
 import type { Supermarket } from './types';
 import styled from 'styled-components';
 
@@ -34,6 +35,7 @@ function AppContent() {
   const { items, supermarkets, addSupermarket } = useShoppingList();
   const [currentView, setCurrentView] = useState<'home' | 'detail'>('home');
   const [selectedSupermarketId, setSelectedSupermarketId] = useState<string | undefined>();
+  const [showManager, setShowManager] = useState(false);
 
   // Initialize with test data on first load if empty
   useEffect(() => {
@@ -56,8 +58,7 @@ function AppContent() {
   };
 
   const handleAddSupermarket = () => {
-    console.log('Add supermarket clicked');
-    // TODO: Open modal or navigate to add supermarket view
+    setShowManager(true);
   };
 
   if (currentView === 'detail' && selectedSupermarketId) {
@@ -65,19 +66,22 @@ function AppContent() {
   }
 
   return (
-    <AppContainer>
-      <Header title="Shopping Lists" />
-      <ContentContainer>
-        <SupermarketList
-          supermarkets={supermarkets}
-          items={items}
-          onSelectSupermarket={handleSelectSupermarket}
-        />
-      </ContentContainer>
-      <AddButtonContainer>
-        <AddButton text="+ Add new supermarket" onClick={handleAddSupermarket} />
-      </AddButtonContainer>
-    </AppContainer>
+    <>
+      <AppContainer>
+        <Header title="Shopping Lists" />
+        <ContentContainer>
+          <SupermarketList
+            supermarkets={supermarkets}
+            items={items}
+            onSelectSupermarket={handleSelectSupermarket}
+          />
+        </ContentContainer>
+        <AddButtonContainer>
+          <AddButton text="+ Add new supermarket" onClick={handleAddSupermarket} />
+        </AddButtonContainer>
+      </AppContainer>
+      <SupermarketManager isOpen={showManager} onClose={() => setShowManager(false)} />
+    </>
   );
 }
 
