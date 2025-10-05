@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import type { ShoppingItem, Supermarket } from '../types';
 import { useLocalStorage } from '../hooks/useLocalStorage';
@@ -15,6 +15,7 @@ interface ShoppingListContextType extends ShoppingListState {
   toggleItemComplete: (id: string) => void;
   changeItemSupermarket: (itemId: string, newSupermarketId: string) => void;
   addSupermarket: (name: string, color: string) => void;
+  addSupermarkets: (supermarkets: Array<{ name: string; color: string }>) => void;
   updateSupermarket: (id: string, updates: Partial<Supermarket>) => void;
   deleteSupermarket: (id: string) => void;
 }
@@ -74,14 +75,23 @@ export function ShoppingListProvider({ children }: ShoppingListProviderProps) {
     );
   };
 
-  const addSupermarket = (name: string, color: string) => {
+  const addSupermarket = useCallback((name: string, color: string) => {
     const newSupermarket: Supermarket = {
       id: crypto.randomUUID(),
       name,
       color,
     };
     setSupermarkets((prev) => [...prev, newSupermarket]);
-  };
+  }, [setSupermarkets]);
+
+  const addSupermarkets = useCallback((supermarketsToAdd: Array<{ name: string; color: string }>) => {
+    const newSupermarkets: Supermarket[] = supermarketsToAdd.map(s => ({
+      id: crypto.randomUUID(),
+      name: s.name,
+      color: s.color,
+    }));
+    setSupermarkets((prev) => [...prev, ...newSupermarkets]);
+  }, [setSupermarkets]);
 
   const updateSupermarket = (id: string, updates: Partial<Supermarket>) => {
     setSupermarkets((prev) =>
@@ -108,6 +118,7 @@ export function ShoppingListProvider({ children }: ShoppingListProviderProps) {
     toggleItemComplete,
     changeItemSupermarket,
     addSupermarket,
+    addSupermarkets,
     updateSupermarket,
     deleteSupermarket,
   };

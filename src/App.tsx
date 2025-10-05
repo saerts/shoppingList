@@ -1,5 +1,5 @@
 import { ThemeProvider } from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { GlobalStyles } from './styles/GlobalStyles';
 import { theme } from './styles/theme';
 import { ShoppingListProvider, useShoppingList } from './context/ShoppingListContext';
@@ -32,20 +32,23 @@ const AddButtonContainer = styled.div`
 `;
 
 function AppContent() {
-  const { items, supermarkets, addSupermarket } = useShoppingList();
+  const { items, supermarkets, addSupermarkets } = useShoppingList();
   const [currentView, setCurrentView] = useState<'home' | 'detail'>('home');
   const [selectedSupermarketId, setSelectedSupermarketId] = useState<string | undefined>();
   const [showManager, setShowManager] = useState(false);
+  const initializedRef = useRef(false);
 
   // Initialize with test data on first load if empty
   useEffect(() => {
-    if (supermarkets.length === 0) {
-      addSupermarket('Colruyt', '#FFD600');
-      addSupermarket('Delhaize', '#D32F2F');
-      addSupermarket('Carrefour', '#2196F3');
+    if (supermarkets.length === 0 && !initializedRef.current) {
+      initializedRef.current = true;
+      addSupermarkets([
+        { name: 'Colruyt', color: '#FFD600' },
+        { name: 'Delhaize', color: '#D32F2F' },
+        { name: 'Carrefour', color: '#2196F3' },
+      ]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [supermarkets.length, addSupermarkets]);
 
   const handleSelectSupermarket = (supermarket: Supermarket) => {
     setSelectedSupermarketId(supermarket.id);
