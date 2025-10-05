@@ -8,27 +8,71 @@ import { SupermarketList } from './components/SupermarketList';
 import { AddButton } from './components/AddButton';
 import { ShoppingListDetail } from './pages/ShoppingListDetail';
 import { SupermarketManager } from './components/SupermarketManager/SupermarketManager';
+import { Logo } from './components/Logo';
 import type { Supermarket } from './types';
 import styled from 'styled-components';
 
 const AppContainer = styled.div`
   min-height: 100vh;
   background-color: ${({ theme }) => theme.colors.background.primary};
+  display: flex;
+  flex-direction: column;
+`;
+
+const HeroSection = styled.div`
+  padding: ${({ theme }) => theme.spacing.xxl} ${({ theme }) => theme.spacing.lg};
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+`;
+
+const HeroTitle = styled.h2`
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSize.xxl};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  margin: 0 0 ${({ theme }) => theme.spacing.md} 0;
+  line-height: ${({ theme }) => theme.typography.lineHeight.tight};
+`;
+
+const HeroSubtitle = styled.p`
+  color: ${({ theme }) => theme.colors.text.secondary};
+  font-size: ${({ theme }) => theme.typography.fontSize.lg};
+  margin: 0 0 ${({ theme }) => theme.spacing.xl} 0;
+  line-height: ${({ theme }) => theme.typography.lineHeight.normal};
 `;
 
 const ContentContainer = styled.div`
-  padding-bottom: ${({ theme }) => theme.spacing.xl};
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`;
+
+const SectionTitle = styled.h3`
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSize.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  margin: 0 auto ${({ theme }) => theme.spacing.lg} auto;
+  padding: 0 ${({ theme }) => theme.spacing.lg};
+  max-width: 600px;
+  text-align: center;
+`;
+
+const EmptyStateContainer = styled.div`
+  text-align: center;
+  padding: ${({ theme }) => theme.spacing.xxl} ${({ theme }) => theme.spacing.lg};
+  max-width: 600px;
+  margin: 0 auto;
+`;
+
+const EmptyStateText = styled.p`
+  color: ${({ theme }) => theme.colors.text.secondary};
+  font-size: ${({ theme }) => theme.typography.fontSize.md};
+  margin: 0 0 ${({ theme }) => theme.spacing.xl} 0;
 `;
 
 const AddButtonContainer = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
   padding: ${({ theme }) => theme.spacing.lg};
-  background: linear-gradient(to top, ${({ theme }) => theme.colors.background.primary} 70%, transparent);
-  max-width: 600px;
-  margin: 0 auto;
+  margin-top: auto;
 `;
 
 function AppContent() {
@@ -72,12 +116,26 @@ function AppContent() {
     <>
       <AppContainer>
         <Header title="Shopping Lists" />
+        <HeroSection>
+          <Logo size="large" showText={false} />
+          <HeroTitle>Your Shopping Lists</HeroTitle>
+          <HeroSubtitle>Organize your shopping by supermarket and never forget an item again</HeroSubtitle>
+        </HeroSection>
         <ContentContainer>
-          <SupermarketList
-            supermarkets={supermarkets}
-            items={items}
-            onSelectSupermarket={handleSelectSupermarket}
-          />
+          {supermarkets.length > 0 ? (
+            <>
+              <SectionTitle>My Supermarkets</SectionTitle>
+              <SupermarketList
+                supermarkets={supermarkets}
+                items={items}
+                onSelectSupermarket={handleSelectSupermarket}
+              />
+            </>
+          ) : (
+            <EmptyStateContainer>
+              <EmptyStateText>Get started by adding your first supermarket below</EmptyStateText>
+            </EmptyStateContainer>
+          )}
         </ContentContainer>
         <AddButtonContainer>
           <AddButton text="+ Add new supermarket" onClick={handleAddSupermarket} />
