@@ -64,7 +64,7 @@ test.describe('Complete User Journey - Golden Path', () => {
     await expect(page.getByLabel('Mark as incomplete')).toBeVisible();
 
     // Step 5: Filter to show only completed items
-    await page.getByRole('button', { name: 'Completed' }).click();
+    await page.getByRole('button', { name: 'Completed', exact: true }).click();
 
     // Only Milk should be visible
     await expect(page.getByText('Milk')).toBeVisible();
@@ -97,13 +97,13 @@ test.describe('Complete User Journey - Golden Path', () => {
     await goToHome(page);
 
     // Step 8: Verify item counts are correct
-    // Colruyt: 2 items (Milk, Eggs)
-    // Delhaize: 3 items (Wine, Cheese, Bread)
+    // Colruyt: 2 items total (Milk - completed, Eggs - uncompleted) = 1 uncompleted
+    // Delhaize: 3 items total (Wine, Cheese, Bread - all uncompleted) = 3 uncompleted
     const colruytCard = page.locator('text="Colruyt"').locator('..');
     const delhaizeCard = page.locator('text="Delhaize"').locator('..');
 
-    await expect(colruytCard.getByText('2 items')).toBeVisible();
-    await expect(delhaizeCard.getByText('3 items')).toBeVisible();
+    await expect(colruytCard.getByText('(1)')).toBeVisible();
+    await expect(delhaizeCard.getByText('(3)')).toBeVisible();
 
     // Step 9: Verify Bread is now in Delhaize
     await navigateToSupermarket(page, 'Delhaize');
@@ -125,8 +125,8 @@ test.describe('Complete User Journey - Golden Path', () => {
     const colruytCardAfterReload = page.locator('text="Colruyt"').locator('..');
     const delhaizeCardAfterReload = page.locator('text="Delhaize"').locator('..');
 
-    await expect(colruytCardAfterReload.getByText('2 items')).toBeVisible();
-    await expect(delhaizeCardAfterReload.getByText('3 items')).toBeVisible();
+    await expect(colruytCardAfterReload.getByText('(1)')).toBeVisible();
+    await expect(delhaizeCardAfterReload.getByText('(3)')).toBeVisible();
 
     // Verify items in Colruyt
     await navigateToSupermarket(page, 'Colruyt');

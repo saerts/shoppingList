@@ -115,9 +115,9 @@ test.describe('localStorage Persistence', () => {
     const market2 = page.locator('text="Market 2"').locator('..');
     const market3 = page.locator('text="Market 3"').locator('..');
 
-    await expect(market1.getByText('2 items')).toBeVisible();
-    await expect(market2.getByText('1 items')).toBeVisible();
-    await expect(market3.getByText('3 items')).toBeVisible();
+    await expect(market1.getByText('(2)')).toBeVisible();
+    await expect(market2.getByText('(1)')).toBeVisible();
+    await expect(market3.getByText('(3)')).toBeVisible();
 
     // Verify items in each supermarket
     await navigateToSupermarket(page, 'Market 1');
@@ -181,10 +181,10 @@ test.describe('localStorage Persistence', () => {
     await expect(page.getByText('New Store')).toBeVisible();
 
     await navigateToSupermarket(page, 'Initial Store');
-    await expect(page.getByText('Initial Item')).toBeVisible();
+    await expect(page.getByText('Initial Item', { exact: true })).toBeVisible();
     await goToHome(page);
 
     await navigateToSupermarket(page, 'New Store');
-    await expect(page.getByText('New Item')).toBeVisible();
+    await expect(page.getByText('New Item', { exact: true })).toBeVisible();
   });
 });

@@ -82,9 +82,10 @@ function AppContent() {
   const [showManager, setShowManager] = useState(false);
   const initializedRef = useRef(false);
 
-  // Initialize with test data on first load if empty
+  // Initialize with test data on first load if empty (disabled in test environments)
   useEffect(() => {
-    if (supermarkets.length === 0 && !initializedRef.current) {
+    const isTest = (navigator as any).webdriver === true;
+    if (supermarkets.length === 0 && !initializedRef.current && !isTest) {
       initializedRef.current = true;
       addSupermarkets([
         { name: 'Colruyt', color: '#FFD600' },
