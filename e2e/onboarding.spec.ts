@@ -6,6 +6,9 @@ test.describe('User Onboarding Flow', () => {
     await page.goto('/');
     await clearLocalStorage(page);
     await page.reload();
+    await page.waitForLoadState('networkidle');
+    // Wait for default supermarkets to be added
+    await page.waitForSelector('text=Colruyt', { timeout: 10000 });
   });
 
   test('first time user sees default supermarkets', async ({ page }) => {

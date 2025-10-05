@@ -4,7 +4,7 @@ import { clearLocalStorage, navigateToSupermarket, addItem, toggleItemCompletion
 test.describe('Item Management', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    // Use default supermarkets for these tests
+    await page.waitForLoadState('networkidle');
   });
 
   test('add multiple items to a supermarket', async ({ page }) => {

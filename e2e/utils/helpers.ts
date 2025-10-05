@@ -64,7 +64,7 @@ export async function createSupermarket(page: Page, name: string, colorIndex: nu
  * Navigate to a supermarket's detail view
  */
 export async function navigateToSupermarket(page: Page, supermarketName: string) {
-  await page.getByText(supermarketName).click();
+  await page.getByText(supermarketName).first().click();
 
   // Wait for detail view to load
   await expect(page.getByText(/Shopping list \(\d+\)/)).toBeVisible();
