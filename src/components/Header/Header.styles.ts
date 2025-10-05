@@ -46,3 +46,28 @@ export const Title = styled.h1<{ $centered?: boolean }>`
   flex: 1;
   text-align: ${({ $centered }) => $centered ? 'center' : 'left'};
 `;
+
+export const MenuButton = styled.button`
+  background: transparent;
+  border: none;
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSize.xl};
+  cursor: pointer;
+  padding: ${({ theme }) => theme.spacing.sm};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  transition: background-color ${({ theme }) => theme.transitions.fast};
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.background.secondary};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.primary};
+    outline-offset: 2px;
+  }
+`;

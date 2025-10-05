@@ -286,9 +286,9 @@ describe('ShoppingListContext', () => {
     it('should change item supermarket', () => {
       const { result } = renderHook(() => useShoppingList(), { wrapper });
 
-      const walmartId: string;
-      const targetId: string;
-      const itemId: string;
+      let walmartId: string;
+      let targetId: string;
+      let itemId: string;
 
       act(() => {
         result.current.addSupermarket('Walmart', '#0071ce');
