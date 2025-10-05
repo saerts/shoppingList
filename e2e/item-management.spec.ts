@@ -1,10 +1,14 @@
 import { test, expect } from '@playwright/test';
-import { clearLocalStorage, navigateToSupermarket, addItem, toggleItemCompletion } from './utils/helpers';
+import { createSupermarket, navigateToSupermarket, addItem, clearLocalStorage } from './utils/helpers';
 
 test.describe('Item Management', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await clearLocalStorage(page);
+    await page.reload();
+
+    // Create a test supermarket
+    await createSupermarket(page, 'Colruyt', 0);
   });
 
   test('add multiple items to a supermarket', async ({ page }) => {
@@ -64,7 +68,7 @@ test.describe('Item Management', () => {
     await milkCard.getByRole('button', { name: /Mark as complete/ }).click();
 
     // Click "Completed" filter
-    await page.getByRole('button', { name: 'Completed' }).click();
+    await page.getByRole('button', { name: 'Completed', exact: true }).click();
 
     // Only "Milk" should be visible
     await expect(page.getByText('Milk')).toBeVisible();
@@ -140,7 +144,7 @@ test.describe('Item Management', () => {
     await addItem(page, 'Milk');
 
     // Filter by completed (should show empty state)
-    await page.getByRole('button', { name: 'Completed' }).click();
+    await page.getByRole('button', { name: 'Completed', exact: true }).click();
 
     await expect(page.getByText('No completed items')).toBeVisible();
   });

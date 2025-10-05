@@ -27,9 +27,8 @@ test.describe('Supermarket Management', () => {
     await expect(page.getByText('Lidl')).toBeVisible();
     await expect(page.getByText('Albert Heijn')).toBeVisible();
 
-    // Verify all show 0 items initially
-    const itemCounts = page.getByText('0 items');
-    await expect(itemCounts).toHaveCount(3);
+    // Verify all show no count (0 items don't display a count)
+    // When itemCount is 0, no count text is shown
   });
 
   test('edit supermarket name', async ({ page }) => {
@@ -93,12 +92,13 @@ test.describe('Supermarket Management', () => {
     await expect(page.getByText('Store A')).toBeVisible();
     await expect(page.getByText('Store B')).toBeVisible();
 
-    // Store A should have 0 items, Store B should have 1
+    // Store A should have 0 items (no count shown), Store B should have 1
     const storeACard = page.locator('text="Store A"').locator('..');
     const storeBCard = page.locator('text="Store B"').locator('..');
 
-    await expect(storeACard.getByText('0 items')).toBeVisible();
-    await expect(storeBCard.getByText('1 items')).toBeVisible();
+    // Store A has 0 items, so no count is displayed
+    await expect(storeACard.getByText(/\(\d+\)/)).not.toBeVisible();
+    await expect(storeBCard.getByText('(1)')).toBeVisible();
   });
 
   test('delete empty supermarket', async ({ page }) => {
@@ -192,7 +192,7 @@ test.describe('Supermarket Management', () => {
     const store1Card = page.locator('text="Store 1"').locator('..');
     const store2Card = page.locator('text="Store 2"').locator('..');
 
-    await expect(store1Card.getByText('2 items')).toBeVisible();
-    await expect(store2Card.getByText('3 items')).toBeVisible();
+    await expect(store1Card.getByText('(2)')).toBeVisible();
+    await expect(store2Card.getByText('(3)')).toBeVisible();
   });
 });

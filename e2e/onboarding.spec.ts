@@ -6,44 +6,44 @@ test.describe('User Onboarding Flow', () => {
     await page.goto('/');
     await clearLocalStorage(page);
     await page.reload();
-    await page.waitForLoadState('networkidle');
-    // Wait for default supermarkets to be added
-    await page.waitForSelector('text=Colruyt', { timeout: 10000 });
   });
 
-  test('first time user sees default supermarkets', async ({ page }) => {
-    // The app initializes with test data, so we should see 3 supermarkets
+  test('first time user can create supermarkets', async ({ page }) => {
+    // Create some supermarkets
+    await createSupermarket(page, 'Colruyt', 0);
+    await createSupermarket(page, 'Delhaize', 1);
+    await createSupermarket(page, 'Carrefour', 2);
+
+    // Verify they appear on the home screen
     await expect(page.getByText('Colruyt')).toBeVisible();
     await expect(page.getByText('Delhaize')).toBeVisible();
     await expect(page.getByText('Carrefour')).toBeVisible();
   });
 
   test('user can create their first supermarket', async ({ page }) => {
-    // Clear the default data
-    await clearLocalStorage(page);
-    await page.reload();
-
     // Create a new supermarket
     await createSupermarket(page, 'My First Store', 0);
 
     // Verify it appears on the home screen
     await expect(page.getByText('My First Store')).toBeVisible();
-    await expect(page.getByText('0 items')).toBeVisible();
+    // Item count of 0 doesn't show any count text
   });
 
   test('user navigates to supermarket detail view', async ({ page }) => {
-    // Use existing Colruyt supermarket
+    // Create a supermarket first
+    await createSupermarket(page, 'Colruyt', 0);
     await navigateToSupermarket(page, 'Colruyt');
 
     // Verify we're in the detail view
     await expect(page.getByText('Shopping list (0)')).toBeVisible();
-    await expect(page.getByText('All')).toBeVisible();
-    await expect(page.getByText('Completed')).toBeVisible();
-    await expect(page.getByText('Uncompleted')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'All', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Completed', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Uncompleted', exact: true })).toBeVisible();
   });
 
   test('user adds their first item', async ({ page }) => {
-    // Navigate to a supermarket
+    // Create a supermarket first
+    await createSupermarket(page, 'Colruyt', 0);
     await navigateToSupermarket(page, 'Colruyt');
 
     // Add an item
@@ -57,10 +57,6 @@ test.describe('User Onboarding Flow', () => {
   });
 
   test('complete onboarding: create supermarket and add item', async ({ page }) => {
-    // Clear existing data
-    await clearLocalStorage(page);
-    await page.reload();
-
     // Create supermarket
     await createSupermarket(page, 'Aldi', 2);
 

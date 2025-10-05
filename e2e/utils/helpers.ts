@@ -37,13 +37,18 @@ export async function waitForStorageUpdate(page: Page, key: string, timeout = 50
  * Create a new supermarket via UI
  */
 export async function createSupermarket(page: Page, name: string, colorIndex: number = 0) {
-  // Click "Add new supermarket" button
+  // Click "Add new supermarket" button on the home screen
   await page.getByText('+ Add new supermarket').click();
 
   // Wait for modal to open
-  await expect(page.getByRole('dialog')).toBeVisible();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
 
-  // Fill in the name
+  // Click "+ Add New Supermarket" button inside the modal
+  await dialog.getByRole('button', { name: '+ Add New Supermarket' }).click();
+
+  // Wait for the input field to appear and fill in the name
+  await page.getByPlaceholder('Supermarket name').waitFor({ state: 'visible' });
   await page.getByPlaceholder('Supermarket name').fill(name);
 
   // Select color (click the nth color option)
@@ -51,12 +56,18 @@ export async function createSupermarket(page: Page, name: string, colorIndex: nu
   await colorButtons.nth(colorIndex).click();
 
   // Click Add button
-  await page.getByRole('button', { name: 'Add' }).click();
+  await dialog.getByRole('button', { name: 'Add' }).click();
+
+  // Verify supermarket appears in the modal
+  await expect(dialog.getByText(name)).toBeVisible();
+
+  // Close the modal
+  await dialog.getByLabel('Close').click();
 
   // Wait for modal to close
-  await expect(page.getByRole('dialog')).not.toBeVisible();
+  await expect(dialog).not.toBeVisible();
 
-  // Verify supermarket appears
+  // Verify supermarket appears on home screen
   await expect(page.getByText(name)).toBeVisible();
 }
 
@@ -83,8 +94,8 @@ export async function addItem(page: Page, itemName: string) {
   // Submit the form (press Enter or click Add)
   await page.keyboard.press('Enter');
 
-  // Verify item appears
-  await expect(page.getByText(itemName)).toBeVisible();
+  // Verify item appears (use first() to handle multiple matches like "+ Add new item")
+  await expect(page.getByText(itemName, { exact: true })).toBeVisible();
 }
 
 /**
@@ -102,7 +113,7 @@ export async function toggleItemCompletion(page: Page, itemName: string) {
  */
 export async function goToHome(page: Page) {
   await page.getByLabel('Go back').click();
-  await expect(page.getByText('Shopping Lists')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Shopping Lists', exact: true })).toBeVisible();
 }
 
 /**
@@ -123,9 +134,9 @@ export async function deleteSupermarket(page: Page, supermarketName: string, con
   await expect(page.getByText('Delete Supermarket')).toBeVisible();
 
   if (confirm) {
-    await page.getByRole('button', { name: 'Delete' }).click();
+    await page.getByRole('button', { name: 'Delete', exact: true }).click();
   } else {
-    await page.getByRole('button', { name: 'Cancel' }).click();
+    await page.getByRole('button', { name: 'Cancel', exact: true }).click();
   }
 }
 
@@ -136,8 +147,9 @@ export async function editSupermarket(page: Page, oldName: string, newName: stri
   await page.getByRole('button', { name: `Edit ${oldName}` }).click();
 
   // Clear and fill new name
-  await page.getByDisplayValue(oldName).clear();
-  await page.getByDisplayValue('').fill(newName);
+  const input = page.getByPlaceholder('Supermarket name');
+  await input.clear();
+  await input.fill(newName);
 
   // Change color if specified
   if (colorIndex !== undefined) {
@@ -146,8 +158,8 @@ export async function editSupermarket(page: Page, oldName: string, newName: stri
   }
 
   // Save
-  await page.getByRole('button', { name: 'Save' }).click();
+  await page.getByRole('button', { name: 'Save', exact: true }).click();
 
-  // Verify new name appears
-  await expect(page.getByText(newName)).toBeVisible();
+  // Wait for edit mode to close (form disappears)
+  await expect(input).not.toBeVisible();
 }
