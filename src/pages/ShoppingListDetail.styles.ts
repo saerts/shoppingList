@@ -3,7 +3,8 @@ import styled from 'styled-components';
 export const Container = styled.div`
   min-height: 100vh;
   background: #1a1a1a;
-  padding-bottom: 80px;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const Header = styled.div`
@@ -92,13 +93,12 @@ export const Content = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
+  flex: 1;
 `;
 
 export const AddButton = styled.button`
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  right: 20px;
+  margin: 20px;
+  margin-top: auto;
   padding: 16px;
   background: #FFD700;
   color: #1a1a1a;
@@ -116,11 +116,5 @@ export const AddButton = styled.button`
   &:focus {
     outline: 2px solid #FFD700;
     outline-offset: 2px;
-  }
-
-  @media (min-width: 768px) {
-    max-width: 600px;
-    left: 50%;
-    transform: translateX(-50%);
   }
 `;
