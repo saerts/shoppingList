@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { clearLocalStorage, navigateToSupermarket, addItem, toggleItemCompletion } from './utils/helpers';
+import {  navigateToSupermarket, addItem } from './utils/helpers';
 
 test.describe('Item Management', () => {
   test.beforeEach(async ({ page }) => {

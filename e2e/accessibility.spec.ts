@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { clearLocalStorage, navigateToSupermarket, goToHome } from './utils/helpers';
+import {  navigateToSupermarket, goToHome } from './utils/helpers';
 
 test.describe('Keyboard Navigation & Accessibility', () => {
   test.beforeEach(async ({ page }) => {
@@ -184,7 +184,7 @@ test.describe('Keyboard Navigation & Accessibility', () => {
     await expect(page.getByRole('dialog')).toBeVisible();
 
     // Get initial focused element
-    const initialFocus = await page.evaluate(() => document.activeElement?.tagName);
+    /*const initialFocus = await page.evaluate(() => document.activeElement?.tagName);*/
 
     // Tab multiple times
     await page.keyboard.press('Tab');
