@@ -143,7 +143,7 @@ test.describe('localStorage Persistence', () => {
     await addItem(page, 'Milk');
     await addItem(page, 'Bread');
 
-    const milkCard = page.locator('text="Milk"').locator('..');
+    const milkCard = page.locator('text="Milk"').locator('../..');
     await milkCard.getByRole('button', { name: /Mark as complete/ }).click();
 
     // Reload
@@ -156,7 +156,7 @@ test.describe('localStorage Persistence', () => {
     await expect(page.getByLabel('Mark as incomplete')).toBeVisible();
 
     // Verify Bread is still uncompleted
-    const breadCard = page.locator('text="Bread"').locator('..');
+    const breadCard = page.locator('text="Bread"').locator('../..');
     await expect(breadCard.getByLabel('Mark as complete')).toBeVisible();
   });
 

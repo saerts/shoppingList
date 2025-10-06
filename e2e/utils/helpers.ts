@@ -103,7 +103,7 @@ export async function addItem(page: Page, itemName: string) {
  */
 export async function toggleItemCompletion(page: Page, itemName: string) {
   // Find the item card and click its checkbox
-  const itemCard = page.locator(`text="${itemName}"`).locator('..');
+  const itemCard = page.locator(`text="${itemName}"`).locator('../..');
   const checkbox = itemCard.getByRole('button', { name: /Mark as/ });
   await checkbox.click();
 }

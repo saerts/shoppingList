@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FormContainer, Input, ButtonGroup, SubmitButton, CancelButton } from './AddItemForm.styles';
+import { FormContainer, Input, ButtonGroup, SubmitButton, CancelButton, CategorySection, CategoryLabel } from './AddItemForm.styles';
+import { CategorySelector } from '../CategorySelector';
+import { useShoppingList } from '../../context/ShoppingListContext';
 
 interface AddItemFormProps {
   supermarketId: string;
-  onAdd: (name: string, supermarketId: string) => void;
+  onAdd: (name: string, supermarketId: string, categoryId?: string) => void;
   onCancel: () => void;
 }
 
@@ -13,7 +15,9 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({
   onCancel,
 }) => {
   const [value, setValue] = useState('');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>('other');
   const inputRef = useRef<HTMLInputElement>(null);
+  const { categories } = useShoppingList();
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -23,8 +27,9 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({
     e.preventDefault();
     const trimmedValue = value.trim();
     if (trimmedValue) {
-      onAdd(trimmedValue, supermarketId);
+      onAdd(trimmedValue, supermarketId, selectedCategoryId);
       setValue('');
+      setSelectedCategoryId('other');
     }
   };
 
@@ -45,6 +50,14 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({
         placeholder="Enter item name"
         aria-label="Item name"
       />
+      <CategorySection>
+        <CategoryLabel>Category</CategoryLabel>
+        <CategorySelector
+          categories={categories}
+          selectedCategoryId={selectedCategoryId}
+          onSelect={setSelectedCategoryId}
+        />
+      </CategorySection>
       <ButtonGroup>
         <CancelButton type="button" onClick={onCancel}>
           Cancel

@@ -81,3 +81,15 @@ export const CancelButton = styled.button`
     outline-offset: 2px;
   }
 `;
+
+export const CategorySection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+`;
+
+export const CategoryLabel = styled.label`
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text};
+`;

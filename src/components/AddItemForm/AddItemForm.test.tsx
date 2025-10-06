@@ -1,6 +1,15 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AddItemForm } from './AddItemForm';
+import { ShoppingListProvider } from '../../context/ShoppingListContext';
+import { ThemeProvider } from 'styled-components';
+import { theme } from '../../styles/theme';
+
+const wrapper = ({ children }: { children: React.ReactNode }) => (
+  <ThemeProvider theme={theme}>
+    <ShoppingListProvider>{children}</ShoppingListProvider>
+  </ThemeProvider>
+);
 
 describe('AddItemForm', () => {
   it('renders input field', () => {
@@ -9,7 +18,8 @@ describe('AddItemForm', () => {
         supermarketId="1"
         onAdd={vi.fn()}
         onCancel={vi.fn()}
-      />
+      />,
+      { wrapper }
     );
 
     expect(screen.getByPlaceholderText('Enter item name')).toBeInTheDocument();
@@ -21,7 +31,8 @@ describe('AddItemForm', () => {
         supermarketId="1"
         onAdd={vi.fn()}
         onCancel={vi.fn()}
-      />
+      />,
+      { wrapper }
     );
 
     const input = screen.getByPlaceholderText('Enter item name');
@@ -37,14 +48,15 @@ describe('AddItemForm', () => {
         supermarketId="1"
         onAdd={mockAdd}
         onCancel={vi.fn()}
-      />
+      />,
+      { wrapper }
     );
 
     const input = screen.getByPlaceholderText('Enter item name');
     await user.type(input, '  Milk  ');
     await user.click(screen.getByText('Add'));
 
-    expect(mockAdd).toHaveBeenCalledWith('Milk', '1');
+    expect(mockAdd).toHaveBeenCalledWith('Milk', '1', 'other');
   });
 
   it('clears input after successful submission', async () => {
@@ -56,7 +68,8 @@ describe('AddItemForm', () => {
         supermarketId="1"
         onAdd={mockAdd}
         onCancel={vi.fn()}
-      />
+      />,
+      { wrapper }
     );
 
     const input = screen.getByPlaceholderText('Enter item name') as HTMLInputElement;
@@ -75,13 +88,14 @@ describe('AddItemForm', () => {
         supermarketId="1"
         onAdd={mockAdd}
         onCancel={vi.fn()}
-      />
+      />,
+      { wrapper }
     );
 
     const input = screen.getByPlaceholderText('Enter item name');
     await user.type(input, 'Milk{Enter}');
 
-    expect(mockAdd).toHaveBeenCalledWith('Milk', '1');
+    expect(mockAdd).toHaveBeenCalledWith('Milk', '1', 'other');
   });
 
   it('calls onCancel when Escape key is pressed', async () => {
@@ -93,7 +107,8 @@ describe('AddItemForm', () => {
         supermarketId="1"
         onAdd={vi.fn()}
         onCancel={mockCancel}
-      />
+      />,
+      { wrapper }
     );
 
     const input = screen.getByPlaceholderText('Enter item name');
@@ -111,7 +126,8 @@ describe('AddItemForm', () => {
         supermarketId="1"
         onAdd={vi.fn()}
         onCancel={mockCancel}
-      />
+      />,
+      { wrapper }
     );
 
     await user.click(screen.getByText('Cancel'));
@@ -125,7 +141,8 @@ describe('AddItemForm', () => {
         supermarketId="1"
         onAdd={vi.fn()}
         onCancel={vi.fn()}
-      />
+      />,
+      { wrapper }
     );
 
     const submitButton = screen.getByText('Add');
@@ -140,7 +157,8 @@ describe('AddItemForm', () => {
         supermarketId="1"
         onAdd={vi.fn()}
         onCancel={vi.fn()}
-      />
+      />,
+      { wrapper }
     );
 
     const input = screen.getByPlaceholderText('Enter item name');
@@ -159,7 +177,8 @@ describe('AddItemForm', () => {
         supermarketId="1"
         onAdd={mockAdd}
         onCancel={vi.fn()}
-      />
+      />,
+      { wrapper }
     );
 
     const input = screen.getByPlaceholderText('Enter item name');

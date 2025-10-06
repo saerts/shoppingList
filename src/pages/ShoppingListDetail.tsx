@@ -3,6 +3,7 @@ import { useShoppingList } from '../context/ShoppingListContext';
 import { ItemList } from '../components/ItemList/ItemList';
 import { AddItemForm } from '../components/AddItemForm/AddItemForm';
 import { SupermarketSwitcher } from '../components/SupermarketSwitcher/SupermarketSwitcher';
+import { CategorySwitcher } from '../components/CategorySwitcher/CategorySwitcher';
 import { EmptyState } from '../components/EmptyState/EmptyState';
 import type { ShoppingItem } from '../types';
 import {
@@ -28,10 +29,11 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
   supermarketId,
   onBack,
 }) => {
-  const { items: allItems, supermarkets, addItem, toggleItemComplete, deleteItem, changeItemSupermarket } = useShoppingList();
+  const { items: allItems, supermarkets, addItem, toggleItemComplete, deleteItem, changeItemSupermarket, updateItemCategory } = useShoppingList();
   const [filter, setFilter] = useState<FilterType>('all');
   const [showAddForm, setShowAddForm] = useState(false);
   const [switcherItem, setSwitcherItem] = useState<ShoppingItem | null>(null);
+  const [categorySwitcherItem, setCategorySwitcherItem] = useState<ShoppingItem | null>(null);
 
   const supermarket = supermarkets.find(s => s.id === supermarketId);
   const items = allItems.filter(item => item.supermarketId === supermarketId);
@@ -44,14 +46,20 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
     );
   }
 
-  const handleAddItem = (name: string, supermarketId: string) => {
-    addItem(name, supermarketId);
+  const handleAddItem = (name: string, supermarketId: string, categoryId?: string) => {
+    addItem(name, supermarketId, categoryId);
     setShowAddForm(false);
   };
 
   const handleChangeSupermarket = (newSupermarketId: string) => {
     if (switcherItem) {
       changeItemSupermarket(switcherItem.id, newSupermarketId);
+    }
+  };
+
+  const handleChangeCategory = (newCategoryId: string) => {
+    if (categorySwitcherItem) {
+      updateItemCategory(categorySwitcherItem.id, newCategoryId);
     }
   };
 
@@ -126,6 +134,7 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
           onToggleComplete={toggleItemComplete}
           onDelete={deleteItem}
           onChangeSupermarket={setSwitcherItem}
+          onChangeCategory={setCategorySwitcherItem}
           emptyState={
             <EmptyState
               message={
@@ -151,6 +160,14 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
           supermarkets={supermarkets}
           onSelect={handleChangeSupermarket}
           onClose={() => setSwitcherItem(null)}
+        />
+      )}
+
+      {categorySwitcherItem && (
+        <CategorySwitcher
+          item={categorySwitcherItem}
+          onSelect={handleChangeCategory}
+          onClose={() => setCategorySwitcherItem(null)}
         />
       )}
     </Container>

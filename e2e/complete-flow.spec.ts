@@ -57,7 +57,7 @@ test.describe('Complete User Journey - Golden Path', () => {
     // Step 4: Go to Colruyt list and mark "Milk" as completed
     await navigateToSupermarket(page, 'Colruyt');
 
-    const milkCard = page.locator('text="Milk"').locator('..');
+    const milkCard = page.locator('text="Milk"').locator('../..');
     await milkCard.getByRole('button', { name: /Mark as complete/ }).click();
 
     // Verify milk is now completed
@@ -75,7 +75,7 @@ test.describe('Complete User Journey - Golden Path', () => {
     await page.getByRole('button', { name: 'All' }).click();
 
     // Step 6: Switch "Bread" to Delhaize
-    const breadCard = page.locator('text="Bread"').locator('..');
+    const breadCard = page.locator('text="Bread"').locator('../..');
     await breadCard.getByLabel('Change supermarket').click();
 
     // Wait for supermarket switcher modal

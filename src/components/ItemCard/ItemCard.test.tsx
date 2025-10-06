@@ -2,16 +2,26 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ItemCard } from './ItemCard';
 import type { ShoppingItem, Supermarket } from '../../types';
+import { ShoppingListProvider } from '../../context/ShoppingListContext';
+import { ThemeProvider } from 'styled-components';
+import { theme } from '../../styles/theme';
+
+const wrapper = ({ children }: { children: React.ReactNode }) => (
+  <ThemeProvider theme={theme}>
+    <ShoppingListProvider>{children}</ShoppingListProvider>
+  </ThemeProvider>
+);
 
 const mockSupermarkets: Supermarket[] = [
-  { id: '1', name: 'Lidl', color: '#0050AA', itemCount: 0 },
-  { id: '2', name: 'Aldi', color: '#FF6600', itemCount: 0 },
+  { id: '1', name: 'Lidl', color: '#0050AA' },
+  { id: '2', name: 'Aldi', color: '#FF6600' },
 ];
 
 const mockItem: ShoppingItem = {
   id: '1',
   name: 'Milk',
   supermarketId: '1',
+  categoryId: 'dairy',
   completed: false,
   createdAt: new Date(),
 };
@@ -29,7 +39,8 @@ describe('ItemCard', () => {
         onToggleComplete={mockToggle}
         onDelete={mockDelete}
         onChangeSupermarket={mockChangeSupermarket}
-      />
+      />,
+      { wrapper }
     );
 
     expect(screen.getByText('Milk')).toBeInTheDocument();
@@ -47,7 +58,8 @@ describe('ItemCard', () => {
         onToggleComplete={mockToggle}
         onDelete={mockDelete}
         onChangeSupermarket={mockChangeSupermarket}
-      />
+      />,
+      { wrapper }
     );
 
     const checkbox = screen.getByLabelText('Mark as complete');
@@ -68,7 +80,8 @@ describe('ItemCard', () => {
         onToggleComplete={mockToggle}
         onDelete={mockDelete}
         onChangeSupermarket={mockChangeSupermarket}
-      />
+      />,
+      { wrapper }
     );
 
     const checkbox = screen.getByLabelText('Mark as incomplete');
@@ -88,7 +101,8 @@ describe('ItemCard', () => {
         onToggleComplete={mockToggle}
         onDelete={mockDelete}
         onChangeSupermarket={mockChangeSupermarket}
-      />
+      />,
+      { wrapper }
     );
 
     const checkbox = screen.getByLabelText('Mark as complete');
@@ -110,7 +124,8 @@ describe('ItemCard', () => {
         onToggleComplete={mockToggle}
         onDelete={mockDelete}
         onChangeSupermarket={mockChangeSupermarket}
-      />
+      />,
+      { wrapper }
     );
 
     const dragHandle = screen.getByLabelText('Change supermarket');
@@ -131,7 +146,8 @@ describe('ItemCard', () => {
         onToggleComplete={mockToggle}
         onDelete={mockDelete}
         onChangeSupermarket={mockChangeSupermarket}
-      />
+      />,
+      { wrapper }
     );
 
     expect(screen.getByText('⋮⋮')).toBeInTheDocument();
