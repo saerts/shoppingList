@@ -25,7 +25,7 @@ test.describe('Item Management', () => {
     await expect(page.getByText('Eggs')).toBeVisible();
 
     // Verify count
-    await expect(page.getByText('Shopping list (3)')).toBeVisible();
+    await expect(page.getByText('Colruyt (3)')).toBeVisible();
   });
 
   test('mark item as completed shows checkmark and strikethrough', async ({ page }) => {
@@ -122,19 +122,19 @@ test.describe('Item Management', () => {
     await navigateToSupermarket(page, 'Colruyt');
 
     // Initially 0 items
-    await expect(page.getByText('Shopping list (0)')).toBeVisible();
+    await expect(page.getByText('Colruyt (0)')).toBeVisible();
 
     // Add one item
     await addItem(page, 'Milk');
-    await expect(page.getByText('Shopping list (1)')).toBeVisible();
+    await expect(page.getByText('Colruyt (1)')).toBeVisible();
 
     // Add another
     await addItem(page, 'Bread');
-    await expect(page.getByText('Shopping list (2)')).toBeVisible();
+    await expect(page.getByText('Colruyt (2)')).toBeVisible();
 
     // Add one more
     await addItem(page, 'Eggs');
-    await expect(page.getByText('Shopping list (3)')).toBeVisible();
+    await expect(page.getByText('Colruyt (3)')).toBeVisible();
   });
 
   test('empty state shows when no items match filter', async ({ page }) => {

@@ -35,7 +35,7 @@ test.describe('User Onboarding Flow', () => {
     await navigateToSupermarket(page, 'Colruyt');
 
     // Verify we're in the detail view
-    await expect(page.getByText('Shopping list (0)')).toBeVisible();
+    await expect(page.getByText('Colruyt (0)')).toBeVisible();
     await expect(page.getByRole('button', { name: 'All', exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Completed', exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Uncompleted', exact: true })).toBeVisible();
@@ -53,7 +53,7 @@ test.describe('User Onboarding Flow', () => {
     await expect(page.getByText('Milk')).toBeVisible();
 
     // Verify count updated
-    await expect(page.getByText('Shopping list (1)')).toBeVisible();
+    await expect(page.getByText('Colruyt (1)')).toBeVisible();
   });
 
   test('complete onboarding: create supermarket and add item', async ({ page }) => {
@@ -74,6 +74,6 @@ test.describe('User Onboarding Flow', () => {
     await expect(page.getByText('Apples')).toBeVisible();
 
     // Verify count
-    await expect(page.getByText('Shopping list (2)')).toBeVisible();
+    await expect(page.getByText('Aldi (2)')).toBeVisible();
   });
 });

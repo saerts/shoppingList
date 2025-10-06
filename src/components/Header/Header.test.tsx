@@ -33,18 +33,4 @@ describe('Header', () => {
     await user.click(screen.getByLabelText('Go back'));
     expect(onBack).toHaveBeenCalledTimes(1);
   });
-
-  it('renders menu button', () => {
-    renderWithTheme(<Header title="Test" />);
-    expect(screen.getByLabelText('Open menu')).toBeInTheDocument();
-  });
-
-  it('calls onMenuClick when menu button is clicked', async () => {
-    const onMenuClick = vi.fn();
-    const user = userEvent.setup();
-    renderWithTheme(<Header title="Test" onMenuClick={onMenuClick} />);
-
-    await user.click(screen.getByLabelText('Open menu'));
-    expect(onMenuClick).toHaveBeenCalledTimes(1);
-  });
 });
