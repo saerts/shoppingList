@@ -34,7 +34,7 @@ test.describe('Complete User Journey - Golden Path', () => {
     await expect(page.getByText('Eggs')).toBeVisible();
 
     // Verify count is 3
-    await expect(page.getByText('Shopping list (3)')).toBeVisible();
+    await expect(page.getByText('Colruyt (3)')).toBeVisible();
 
     // Go back to home
     await goToHome(page);
@@ -49,7 +49,7 @@ test.describe('Complete User Journey - Golden Path', () => {
     await expect(page.getByText('Cheese')).toBeVisible();
 
     // Verify count is 2
-    await expect(page.getByText('Shopping list (2)')).toBeVisible();
+    await expect(page.getByText('Delhaize (2)')).toBeVisible();
 
     // Go back to home
     await goToHome(page);
@@ -91,7 +91,7 @@ test.describe('Complete User Journey - Golden Path', () => {
     await expect(page.getByText('Bread')).not.toBeVisible();
 
     // Count should be 2 now (Milk and Eggs remain)
-    await expect(page.getByText('Shopping list (2)')).toBeVisible();
+    await expect(page.getByText('Colruyt (2)')).toBeVisible();
 
     // Step 7: Go back to home
     await goToHome(page);
@@ -110,7 +110,7 @@ test.describe('Complete User Journey - Golden Path', () => {
     await expect(page.getByText('Bread')).toBeVisible();
     await expect(page.getByText('Wine')).toBeVisible();
     await expect(page.getByText('Cheese')).toBeVisible();
-    await expect(page.getByText('Shopping list (3)')).toBeVisible();
+    await expect(page.getByText('Delhaize (3)')).toBeVisible();
 
     await goToHome(page);
 

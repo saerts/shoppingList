@@ -78,7 +78,7 @@ export async function navigateToSupermarket(page: Page, supermarketName: string)
   await page.getByText(supermarketName).first().click();
 
   // Wait for detail view to load
-  await expect(page.getByText(/Shopping list \(\d+\)/)).toBeVisible();
+  await expect(page.getByText(new RegExp(`${supermarketName} \\(\\d+\\)`))).toBeVisible();
 }
 
 /**

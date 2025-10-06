@@ -90,7 +90,7 @@ export const ShoppingListDetail: React.FC<ShoppingListDetailProps> = ({
           ←
         </BackButton>
         <div>
-          <HeaderTitle>Shopping list ({items.length})</HeaderTitle>
+          <HeaderTitle>{supermarket.name} ({items.length})</HeaderTitle>
           {items.length > 0 && (
             <HeaderSubtitle>Last modified: {getLastModified()}</HeaderSubtitle>
           )}

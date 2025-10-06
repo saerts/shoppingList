@@ -16,7 +16,7 @@ test.describe('Keyboard Navigation & Accessibility', () => {
     await navigateToSupermarket(page, 'Colruyt');
 
     // Should be in detail view
-    await expect(page.getByText(/Shopping list \(\d+\)/)).toBeVisible();
+    await expect(page.getByText(/Colruyt \(\d+\)/)).toBeVisible();
 
     // Go back
     await goToHome(page);

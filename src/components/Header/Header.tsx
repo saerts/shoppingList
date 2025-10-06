@@ -16,9 +16,6 @@ export const Header = ({ title, showBackButton = false, onBack, onMenuClick }: H
         </BackButton>
       )}
       <Title $centered={!showBackButton}>{title}</Title>
-      <MenuButton onClick={onMenuClick} aria-label="Open menu">
-        ☰
-      </MenuButton>
     </HeaderContainer>
   );
 };

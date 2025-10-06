@@ -50,7 +50,7 @@ test.describe('localStorage Persistence', () => {
 
     await navigateToSupermarket(page, 'Persistent Store');
     await expect(page.getByText('Coffee')).toBeVisible();
-    await expect(page.getByText('Shopping list (1)')).toBeVisible();
+    await expect(page.getByText('Persistent Store (1)')).toBeVisible();
   });
 
   test('data persists across multiple reloads', async ({ page }) => {
