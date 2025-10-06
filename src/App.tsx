@@ -84,7 +84,7 @@ function AppContent() {
 
   // Initialize with test data on first load if empty (disabled in test environments)
   useEffect(() => {
-    const isTest = (navigator as never).webdriver;
+    const isTest = (navigator as any).webdriver;
     if (supermarkets.length === 0 && !initializedRef.current && !isTest) {
       initializedRef.current = true;
       addSupermarkets([

@@ -1,13 +1,12 @@
-import { HeaderContainer, BackButton, Title, MenuButton } from './Header.styles';
+import { HeaderContainer, BackButton, Title } from './Header.styles';
 
 interface HeaderProps {
   title: string;
   showBackButton?: boolean;
   onBack?: () => void;
-  onMenuClick?: () => void;
 }
 
-export const Header = ({ title, showBackButton = false, onBack, onMenuClick }: HeaderProps) => {
+export const Header = ({ title, showBackButton = false, onBack }: HeaderProps) => {
   return (
     <HeaderContainer>
       {showBackButton && (
