@@ -41,6 +41,14 @@ describe('ShoppingListContext', () => {
       expect(result.current.items).toEqual([]);
       expect(result.current.supermarkets).toEqual([]);
     });
+
+    it('should start with predefined categories', () => {
+      const { result } = renderHook(() => useShoppingList(), { wrapper });
+
+      expect(result.current.categories).toHaveLength(11);
+      expect(result.current.categories.find(c => c.id === 'produce')).toBeDefined();
+      expect(result.current.categories.find(c => c.id === 'other')).toBeDefined();
+    });
   });
 
   describe('Supermarket operations', () => {
@@ -286,10 +294,6 @@ describe('ShoppingListContext', () => {
     it('should change item supermarket', () => {
       const { result } = renderHook(() => useShoppingList(), { wrapper });
 
-      let walmartId: string;
-      let targetId: string;
-      let itemId: string;
-
       act(() => {
         result.current.addSupermarket('Walmart', '#0071ce');
       });
@@ -298,14 +302,14 @@ describe('ShoppingListContext', () => {
         result.current.addSupermarket('Target', '#cc0000');
       });
 
-      walmartId = result.current.supermarkets[0].id;
-      targetId = result.current.supermarkets[1].id;
+      const walmartId = result.current.supermarkets[0].id;
+      const targetId = result.current.supermarkets[1].id;
 
       act(() => {
         result.current.addItem('Milk', walmartId);
       });
 
-      itemId = result.current.items[0].id;
+      const itemId = result.current.items[0].id;
 
       expect(result.current.items[0].supermarketId).toBe(walmartId);
 
@@ -378,6 +382,141 @@ describe('ShoppingListContext', () => {
 
       expect(result.current.supermarkets).toHaveLength(1);
       expect(result.current.supermarkets[0].name).toBe('Walmart');
+    });
+  });
+
+  describe('Category operations', () => {
+    it('should add an item with a category', () => {
+      const { result } = renderHook(() => useShoppingList(), { wrapper });
+
+      act(() => {
+        result.current.addSupermarket('Walmart', '#0071ce');
+      });
+
+      const supermarketId = result.current.supermarkets[0].id;
+
+      act(() => {
+        result.current.addItem('Milk', supermarketId, 'dairy');
+      });
+
+      expect(result.current.items[0].categoryId).toBe('dairy');
+    });
+
+    it('should default to "other" category if none specified', () => {
+      const { result } = renderHook(() => useShoppingList(), { wrapper });
+
+      act(() => {
+        result.current.addSupermarket('Walmart', '#0071ce');
+      });
+
+      const supermarketId = result.current.supermarkets[0].id;
+
+      act(() => {
+        result.current.addItem('Unknown Item', supermarketId);
+      });
+
+      expect(result.current.items[0].categoryId).toBe('other');
+    });
+
+    it('should update item category', () => {
+      const { result } = renderHook(() => useShoppingList(), { wrapper });
+
+      act(() => {
+        result.current.addSupermarket('Walmart', '#0071ce');
+      });
+
+      const supermarketId = result.current.supermarkets[0].id;
+
+      act(() => {
+        result.current.addItem('Milk', supermarketId, 'other');
+      });
+
+      const itemId = result.current.items[0].id;
+
+      act(() => {
+        result.current.updateItemCategory(itemId, 'dairy');
+      });
+
+      expect(result.current.items[0].categoryId).toBe('dairy');
+    });
+
+    it('should add a custom category', () => {
+      const { result } = renderHook(() => useShoppingList(), { wrapper });
+
+      act(() => {
+        result.current.addCategory('Pet Supplies', '🐾', '#FFA500');
+      });
+
+      expect(result.current.categories).toHaveLength(12);
+      const petCategory = result.current.categories.find(c => c.name === 'Pet Supplies');
+      expect(petCategory).toBeDefined();
+      expect(petCategory?.icon).toBe('🐾');
+      expect(petCategory?.color).toBe('#FFA500');
+    });
+
+    it('should update a category', () => {
+      const { result } = renderHook(() => useShoppingList(), { wrapper });
+
+      act(() => {
+        result.current.addCategory('Pet Supplies', '🐾', '#FFA500');
+      });
+
+      const categoryId = result.current.categories.find(c => c.name === 'Pet Supplies')?.id;
+
+      act(() => {
+        result.current.updateCategory(categoryId!, { name: 'Pet Care' });
+      });
+
+      const updatedCategory = result.current.categories.find(c => c.id === categoryId);
+      expect(updatedCategory?.name).toBe('Pet Care');
+      expect(updatedCategory?.icon).toBe('🐾');
+    });
+
+    it('should delete a category and move items to "other"', () => {
+      const { result } = renderHook(() => useShoppingList(), { wrapper });
+
+      act(() => {
+        result.current.addSupermarket('Walmart', '#0071ce');
+      });
+
+      const supermarketId = result.current.supermarkets[0].id;
+
+      act(() => {
+        result.current.addCategory('Pet Supplies', '🐾', '#FFA500');
+      });
+
+      const petCategoryId = result.current.categories.find(c => c.name === 'Pet Supplies')?.id;
+
+      act(() => {
+        result.current.addItem('Dog Food', supermarketId, petCategoryId);
+      });
+
+      act(() => {
+        result.current.addItem('Cat Litter', supermarketId, petCategoryId);
+      });
+
+      expect(result.current.items[0].categoryId).toBe(petCategoryId);
+      expect(result.current.items[1].categoryId).toBe(petCategoryId);
+
+      act(() => {
+        result.current.deleteCategory(petCategoryId);
+      });
+
+      expect(result.current.categories.find(c => c.id === petCategoryId)).toBeUndefined();
+      expect(result.current.items[0].categoryId).toBe('other');
+      expect(result.current.items[1].categoryId).toBe('other');
+    });
+
+    it('should persist categories to localStorage', () => {
+      const { result } = renderHook(() => useShoppingList(), { wrapper });
+
+      act(() => {
+        result.current.addCategory('Pet Supplies', '🐾', '#FFA500');
+      });
+
+      const storedCategories = JSON.parse(localStorage.getItem('shopping-categories') || '[]');
+      expect(storedCategories).toHaveLength(12);
+      expect(storedCategories.find((c: never) => c.name === 'Pet Supplies')).toBeDefined();
     });
   });
 

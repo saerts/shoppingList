@@ -64,7 +64,7 @@ test.describe('Item Management', () => {
     await addItem(page, 'Eggs');
 
     // Mark "Milk" as completed
-    const milkCard = page.locator('text="Milk"').locator('..');
+    const milkCard = page.locator('text="Milk"').locator('../..');
     await milkCard.getByRole('button', { name: /Mark as complete/ }).click();
 
     // Click "Completed" filter
@@ -85,7 +85,7 @@ test.describe('Item Management', () => {
     await addItem(page, 'Eggs');
 
     // Mark "Milk" as completed
-    const milkCard = page.locator('text="Milk"').locator('..');
+    const milkCard = page.locator('text="Milk"').locator('../..');
     await milkCard.getByRole('button', { name: /Mark as complete/ }).click();
 
     // Click "Uncompleted" filter
@@ -104,7 +104,7 @@ test.describe('Item Management', () => {
     await addItem(page, 'Milk');
     await addItem(page, 'Bread');
 
-    const milkCard = page.locator('text="Milk"').locator('..');
+    const milkCard = page.locator('text="Milk"').locator('../..');
     await milkCard.getByRole('button', { name: /Mark as complete/ }).click();
 
     // Click "Uncompleted" first

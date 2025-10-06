@@ -66,8 +66,14 @@ export const CheckIcon = styled.span`
   }
 `;
 
-export const ItemText = styled.span<{ $completed: boolean }>`
+export const ItemContent = styled.div`
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+export const ItemText = styled.span<{ $completed: boolean }>`
   color: ${props => props.$completed ? '#888' : '#fff'};
   font-size: 16px;
   text-decoration: ${props => props.$completed ? 'line-through' : 'none'};
@@ -75,7 +81,7 @@ export const ItemText = styled.span<{ $completed: boolean }>`
   transition: color 0.3s ease, text-decoration 0.3s ease;
 `;
 
-export const DragHandle = styled.button`
+export const ActionButton = styled.button`
   width: 44px;
   height: 44px;
   border: none;
@@ -89,7 +95,6 @@ export const DragHandle = styled.button`
   justify-content: center;
   flex-shrink: 0;
   transition: all 0.2s ease;
-  letter-spacing: -2px;
 
   &:hover {
     color: #FFD700;
@@ -104,5 +109,18 @@ export const DragHandle = styled.button`
     outline: 2px solid #FFD700;
     outline-offset: 2px;
     border-radius: 4px;
+  }
+`;
+
+export const DragHandle = styled(ActionButton)`
+  letter-spacing: -2px;
+`;
+
+export const DeleteButton = styled(ActionButton)`
+  color: #666;
+
+  &:hover {
+    color: #ff4444;
+    transform: scale(1.1);
   }
 `;

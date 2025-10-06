@@ -1,23 +1,29 @@
 import { createContext, useContext, useCallback } from 'react';
 import type { ReactNode } from 'react';
-import type { ShoppingItem, Supermarket } from '../types';
+import type { ShoppingItem, Supermarket, Category } from '../types';
+import { PREDEFINED_CATEGORIES } from '../types';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 interface ShoppingListState {
   items: ShoppingItem[];
   supermarkets: Supermarket[];
+  categories: Category[];
 }
 
 interface ShoppingListContextType extends ShoppingListState {
-  addItem: (name: string, supermarketId: string) => void;
+  addItem: (name: string, supermarketId: string, categoryId?: string) => void;
   updateItem: (id: string, updates: Partial<ShoppingItem>) => void;
   deleteItem: (id: string) => void;
   toggleItemComplete: (id: string) => void;
   changeItemSupermarket: (itemId: string, newSupermarketId: string) => void;
+  updateItemCategory: (itemId: string, categoryId: string) => void;
   addSupermarket: (name: string, color: string) => void;
   addSupermarkets: (supermarkets: Array<{ name: string; color: string }>) => void;
   updateSupermarket: (id: string, updates: Partial<Supermarket>) => void;
   deleteSupermarket: (id: string) => void;
+  addCategory: (name: string, icon: string, color: string) => void;
+  updateCategory: (id: string, updates: Partial<Category>) => void;
+  deleteCategory: (id: string) => void;
 }
 
 const ShoppingListContext = createContext<ShoppingListContextType | undefined>(undefined);
@@ -29,6 +35,7 @@ interface ShoppingListProviderProps {
 const INITIAL_STATE: ShoppingListState = {
   items: [],
   supermarkets: [],
+  categories: PREDEFINED_CATEGORIES,
 };
 
 export function ShoppingListProvider({ children }: ShoppingListProviderProps) {
@@ -37,12 +44,17 @@ export function ShoppingListProvider({ children }: ShoppingListProviderProps) {
     'shopping-supermarkets',
     INITIAL_STATE.supermarkets
   );
+  const [categories, setCategories] = useLocalStorage<Category[]>(
+    'shopping-categories',
+    INITIAL_STATE.categories
+  );
 
-  const addItem = (name: string, supermarketId: string) => {
+  const addItem = (name: string, supermarketId: string, categoryId?: string) => {
     const newItem: ShoppingItem = {
       id: crypto.randomUUID(),
       name,
       supermarketId,
+      categoryId: categoryId || 'other',
       completed: false,
       createdAt: new Date(),
     };
@@ -71,6 +83,14 @@ export function ShoppingListProvider({ children }: ShoppingListProviderProps) {
     setItems((prev) =>
       prev.map((item) =>
         item.id === itemId ? { ...item, supermarketId: newSupermarketId } : item
+      )
+    );
+  };
+
+  const updateItemCategory = (itemId: string, categoryId: string) => {
+    setItems((prev) =>
+      prev.map((item) =>
+        item.id === itemId ? { ...item, categoryId } : item
       )
     );
   };
@@ -109,18 +129,53 @@ export function ShoppingListProvider({ children }: ShoppingListProviderProps) {
     setItems((prev) => prev.filter((item) => item.supermarketId !== id));
   };
 
+  const addCategory = useCallback((name: string, icon: string, color: string) => {
+    const newCategory: Category = {
+      id: crypto.randomUUID(),
+      name,
+      icon,
+      color,
+    };
+    setCategories((prev) => [...prev, newCategory]);
+  }, [setCategories]);
+
+  const updateCategory = (id: string, updates: Partial<Category>) => {
+    setCategories((prev) =>
+      prev.map((category) =>
+        category.id === id ? { ...category, ...updates } : category
+      )
+    );
+  };
+
+  const deleteCategory = (id: string) => {
+    // Delete the category
+    setCategories((prev) => prev.filter((category) => category.id !== id));
+
+    // Move items with this category to "Other"
+    setItems((prev) =>
+      prev.map((item) =>
+        item.categoryId === id ? { ...item, categoryId: 'other' } : item
+      )
+    );
+  };
+
   const value: ShoppingListContextType = {
     items,
     supermarkets,
+    categories,
     addItem,
     updateItem,
     deleteItem,
     toggleItemComplete,
     changeItemSupermarket,
+    updateItemCategory,
     addSupermarket,
     addSupermarkets,
     updateSupermarket,
     deleteSupermarket,
+    addCategory,
+    updateCategory,
+    deleteCategory,
   };
 
   return (

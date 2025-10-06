@@ -1,15 +1,24 @@
 import { render, screen } from '@testing-library/react';
 import { ItemList } from './ItemList';
 import type { ShoppingItem, Supermarket } from '../../types';
+import { ShoppingListProvider } from '../../context/ShoppingListContext';
+import { ThemeProvider } from 'styled-components';
+import { theme } from '../../styles/theme';
+
+const wrapper = ({ children }: { children: React.ReactNode }) => (
+  <ThemeProvider theme={theme}>
+    <ShoppingListProvider>{children}</ShoppingListProvider>
+  </ThemeProvider>
+);
 
 const mockSupermarkets: Supermarket[] = [
-  { id: '1', name: 'Lidl', color: '#0050AA', itemCount: 0 },
+  { id: '1', name: 'Lidl', color: '#0050AA' },
 ];
 
 const mockItems: ShoppingItem[] = [
-  { id: '1', name: 'Milk', supermarketId: '1', completed: false, createdAt: new Date() },
-  { id: '2', name: 'Bread', supermarketId: '1', completed: true, createdAt: new Date() },
-  { id: '3', name: 'Eggs', supermarketId: '1', completed: false, createdAt: new Date() },
+  { id: '1', name: 'Milk', supermarketId: '1', categoryId: 'dairy', completed: false, createdAt: new Date() },
+  { id: '2', name: 'Bread', supermarketId: '1', categoryId: 'bakery', completed: true, createdAt: new Date() },
+  { id: '3', name: 'Eggs', supermarketId: '1', categoryId: 'dairy', completed: false, createdAt: new Date() },
 ];
 
 describe('ItemList', () => {
@@ -22,7 +31,8 @@ describe('ItemList', () => {
         onToggleComplete={vi.fn()}
         onDelete={vi.fn()}
         onChangeSupermarket={vi.fn()}
-      />
+      />,
+      { wrapper }
     );
 
     expect(screen.getByText('Milk')).toBeInTheDocument();
@@ -39,7 +49,8 @@ describe('ItemList', () => {
         onToggleComplete={vi.fn()}
         onDelete={vi.fn()}
         onChangeSupermarket={vi.fn()}
-      />
+      />,
+      { wrapper }
     );
 
     expect(screen.queryByText('Milk')).not.toBeInTheDocument();
@@ -56,7 +67,8 @@ describe('ItemList', () => {
         onToggleComplete={vi.fn()}
         onDelete={vi.fn()}
         onChangeSupermarket={vi.fn()}
-      />
+      />,
+      { wrapper }
     );
 
     expect(screen.getByText('Milk')).toBeInTheDocument();
@@ -66,7 +78,7 @@ describe('ItemList', () => {
 
   it('renders empty state when no items match filter', () => {
     const completedItems: ShoppingItem[] = [
-      { id: '1', name: 'Milk', supermarketId: '1', completed: true, createdAt: new Date() },
+      { id: '1', name: 'Milk', supermarketId: '1', categoryId: 'dairy', completed: true, createdAt: new Date() },
     ];
 
     render(
@@ -78,7 +90,8 @@ describe('ItemList', () => {
         onDelete={vi.fn()}
         onChangeSupermarket={vi.fn()}
         emptyState={<div>No items found</div>}
-      />
+      />,
+      { wrapper }
     );
 
     expect(screen.getByText('No items found')).toBeInTheDocument();
@@ -94,7 +107,8 @@ describe('ItemList', () => {
         onDelete={vi.fn()}
         onChangeSupermarket={vi.fn()}
         emptyState={<div>No items</div>}
-      />
+      />,
+      { wrapper }
     );
 
     expect(screen.getByText('No items')).toBeInTheDocument();
